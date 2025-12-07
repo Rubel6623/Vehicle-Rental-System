@@ -19,7 +19,7 @@ const createUser = async (payload: Record<string, unknown>) => {
 };
 
 const getUser = async() =>{
-  const result = await pool.query(`SELECT * FROM users`);
+  const result = await pool.query(`SELECT id, name, email, phone, role FROM users`);
   return result;
 };
 
@@ -30,9 +30,15 @@ const updateUser = async(name: string, email: string, phone: string, role:string
   return result;
 }
 
+const deleteUser = async(id: string) =>{
+  const result = await pool.query(`DELETE FROM users WHERE id = $1`, [id]);
+
+  return result;
+}
 
 export const userServices = {
   createUser,
   getUser,
   updateUser,
+  deleteUser,
 }

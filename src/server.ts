@@ -3,6 +3,7 @@ import config from "./config";
 import initDB, { pool } from "./config/db";
 import { userRoutes } from "./modules/users/user.route";
 import { authRoutes } from "./modules/auth/auth.route";
+import { vehicleRouter } from "./modules/vehicles/vehicle.route";
 
 const app = express();
 const port = config.port;
@@ -18,6 +19,8 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/v1/users", userRoutes);
 
 app.use("/api/v1/auth", authRoutes);
+
+app.use("/api/v1/vehicles", vehicleRouter);
 
 
 app.listen(port, () => {
