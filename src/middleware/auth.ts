@@ -15,11 +15,12 @@ const auth = (...roles: string[]) => {
       const token = authHeader.split(" ")[1];
 
       const decoded = jwt.verify(token!, config.jwtSecret as string) as JwtPayload;
+      
       console.log(decoded);
       req.user = decoded;
 
       if(roles.length && !roles.includes(decoded.role as string)){
-        return res.status(500).json({
+        return res.status(401).json({
           error: "unauthorized...!!"
         })
       }

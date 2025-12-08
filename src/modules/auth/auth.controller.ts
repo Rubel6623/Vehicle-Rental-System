@@ -27,6 +27,23 @@ const loginUser = async(req: Request, res: Response)=>{
     }
 };
 
+const singUpUser = async (req: Request, res: Response) => {
+  try {
+    const result = await authServices.userRegister(req.body);
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      data: result.rows[0],
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 export const authController = {
   loginUser,
+  singUpUser,
 }
