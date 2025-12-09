@@ -6,9 +6,13 @@ import { Roles } from '../auth/auth.constant';
 const router = express.Router();
 
 router.post("/", auth(Roles.admin), vehicleController.createVehicle);
+
 router.get("/", vehicleController.getVehicles);
+
 router.get("/:id", vehicleController.getSingleVehicle);
-router.put("/:id",  vehicleController.updateVehicle);
+
+router.put("/:id", auth(Roles.admin),  vehicleController.updateVehicle);
+
 router.delete("/:id",auth(Roles.admin), vehicleController.deleteVehicle);
 
 export const vehicleRouter = router;

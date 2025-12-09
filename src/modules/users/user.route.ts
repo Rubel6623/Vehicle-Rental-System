@@ -5,10 +5,14 @@ import { Roles } from '../auth/auth.constant';
 
 const router = express.Router();
 
-router.post("/", userControllers.createUser);
-router.get("/", auth(), userControllers.getUser);
-router.get("/:id", auth("admin"), userControllers.getSingleUser);
-router.put("/:id", userControllers.updateUser);
+// router.post("/", userControllers.createUser);
+
+router.get("/", auth(Roles.admin), userControllers.getUser);
+
+router.get("/:id", auth(Roles.admin), userControllers.getSingleUser);
+
+router.put("/:id",auth(Roles.admin, Roles.user), userControllers.updateUser);
+
 router.delete("/:id", auth(Roles.admin), userControllers.deleteUser);
 
 export const userRoutes = router;

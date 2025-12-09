@@ -1,21 +1,6 @@
 import express, { Request, Response } from "express";
 import { userServices } from "./user.service";
 
-const createUser = async (req: Request, res: Response) => {
-  try {
-    const result = await userServices.createUser(req.body);
-    res.status(201).json({
-      success: true,
-      message: "User registered successfully",
-      data: result.rows[0],
-    });
-  } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-};
 
 const getUser = async (req: Request, res: Response) => {
   try {
@@ -65,8 +50,32 @@ const getSingleUser= async(req:Request, res:Response)=>{
 const updateUser = async(req:Request, res:Response)=>{
   const { name, email, phone, role } = req.body;
 
+  const updateUserId = req.params.id!;
+  const loggedInUserId = req.user?.id;
+  const userRole = req.user?.role;
+
   try {
-    const result = await userServices.updateUser(name, email,phone,role, req.params.id!);
+
+    if (!userRole) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized request.",
+    });
+  }
+
+    if (userRole !== "admin" && loggedInUserId !== updateUserId) {
+      return res.status(403).json({
+        success: false,
+        message: "You can update only your own profile.",
+      });
+    }
+
+    let setRole = role;
+    if(userRole !== "admin"){
+      setRole = undefined; 
+    }
+
+    const result = await userServices.updateUser(name, email,phone,setRole, updateUserId);
 
     const { password, created_at, updated_at, ...userData } = result.rows[0];
 
@@ -120,7 +129,6 @@ const deleteUser = async(req:Request, res:Response)=>{
 
 
 export const userControllers = {
-  createUser,
   getUser,
   getSingleUser,
   updateUser,

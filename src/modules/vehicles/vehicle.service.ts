@@ -30,7 +30,7 @@ const updateVehicle = async(vehicle_name:string, type:string, registration_numbe
   delete result.rows[0].created_at;
   delete result.rows[0].updated_at;
 
-  console.log(result);
+  // console.log(result);
 
   return result;
 }
