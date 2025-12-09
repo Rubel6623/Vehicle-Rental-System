@@ -1,4 +1,3 @@
-import { Roles } from './../../modules/auth/auth.constant';
 import { JwtPayload } from "jsonwebtoken";
 
 declare global{

@@ -5,8 +5,8 @@ import { Roles } from '../auth/auth.constant';
 
 const router = express.Router();
 
-router.post("/",auth(Roles.admin, Roles.user), bookingController.createBooking);
+router.post("/", auth(Roles.admin, Roles.user), bookingController.createBooking);
 
-router.get("/", bookingController.getBookings);
+router.get("/",auth(Roles.admin, Roles.user), bookingController.getBookings);
 
 export const bookingRouter = router;

@@ -20,6 +20,13 @@ const getSingleVehicle = async(id: string) =>{
   return result;
 }
 
+const updateVehicleStatus = async (id: number, status: string) => {
+  await pool.query(
+    `UPDATE vehicles SET availability_status = $1, updated_at = NOW() WHERE id = $2`,
+    [status, id]
+  );
+};
+
 const updateVehicle = async(vehicle_name:string, type:string, registration_number:string, daily_rent_price:number, availability_status:string, id:string) =>{
 
   const result = await pool.query(`UPDATE vehicles SET vehicle_name=$1, type=$2, registration_number=$3, daily_rent_price=$4, availability_status=$5 WHERE id=$6 RETURNING *`, [vehicle_name, type,registration_number, daily_rent_price, availability_status, id]);
@@ -29,8 +36,6 @@ const updateVehicle = async(vehicle_name:string, type:string, registration_numbe
 
   delete result.rows[0].created_at;
   delete result.rows[0].updated_at;
-
-  // console.log(result);
 
   return result;
 }
@@ -56,5 +61,6 @@ export const vehicleService = {
   getVehicles,
   getSingleVehicle,
   updateVehicle,
-  deleteVehicle
+  deleteVehicle,
+  updateVehicleStatus
 }
