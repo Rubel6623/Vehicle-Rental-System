@@ -8,13 +8,6 @@ export const pool = new Pool({
 
 const initDB = async () => {
 
-  // await pool.query(`
-  //   CREATE TYPE user_role AS ENUM ('admin', 'customer');
-  //   CREATE TYPE vehicle_type AS ENUM ('car', 'bike', 'van', 'SUV');
-  //   CREATE TYPE vehicle_availability AS ENUM ('available', 'booked');
-  //   CREATE TYPE booking_status AS ENUM ('active', 'cancelled', 'returned');
-  // `);
-
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,

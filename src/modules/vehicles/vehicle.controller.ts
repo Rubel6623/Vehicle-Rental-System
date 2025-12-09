@@ -34,6 +34,14 @@ const getVehicles = async (req: Request, res: Response) => {
       daily_rent_price: Number(vehicle.daily_rent_price),
     }));
 
+    if(result.rows.length === 0){
+      return res.status(200).json({
+        success: true,
+        message: "No vehicles found",
+        data: []
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: "Users retrieved successfully",
@@ -111,9 +119,16 @@ const updateVehicle = async(req:Request, res:Response)=>{
 const deleteVehicle = async(req:Request, res:Response)=>{
 
   try {
-    const result = await vehicleService.deleteVehicle(req.params.id!);
+    const { booked, result } = await vehicleService.deleteVehicle(req.params.id!);
 
-    if(result.rowCount === 0){
+    if (booked) {
+      return res.status(400).json({
+        success: false,
+        message: "Vehicle cannot be deleted as it has active bookings",
+      });
+    }
+
+    if(result!.rowCount === 0){
       res.status(404).json({
         success: false,
         message: "Vehicle not found..."
