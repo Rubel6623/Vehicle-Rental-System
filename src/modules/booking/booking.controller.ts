@@ -69,10 +69,10 @@ const createBooking = async (req: Request, res: Response) => {
 
 const getBookings = async (req: Request, res: Response) => {
   try {
-    const {  role } = req.user!;
+    const { role } = req.user!;
     const userId = req.user!.id;
 
-    console.log(userId, role,req.user!.id);
+    console.log(userId, role, req.user!.id);
 
     const result = await bookingService.getBookings(role, userId);
 
@@ -143,7 +143,7 @@ const getBookings = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       message: "Your bookings retrieved successfully",
-      data: userData, 
+      data: userData,
     });
   } catch (err: any) {
     res.status(500).json({
@@ -154,7 +154,46 @@ const getBookings = async (req: Request, res: Response) => {
   }
 };
 
+const updateStatus = async (req: Request, res: Response) => {
+  try {
+    const bookingId = req.params.id!;
+    const { status } = req.body;
+    const user = req.user!;
+
+    const result = await bookingService.updateBookingStatus(
+      bookingId,
+      status,
+      user
+    );
+
+    let message = "";
+
+    if (status === "cancelled") message = "Booking cancelled successfully";
+    if (status === "returned")
+      message = "Booking marked as returned. Vehicle is now available";
+    
+    result.booking.rent_start_date = result.booking.rent_start_date.toISOString().split("T")[0];
+    result.booking.rent_end_date = result.booking.rent_end_date.toISOString().split("T")[0];
+
+    return res.status(200).json({
+      success: true,
+      message,
+      data: {
+        ...result.booking,
+        vehicle: result.vehicle,
+      },
+    });
+  } catch (err: any) {
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+
 export const bookingController = {
   createBooking,
   getBookings,
+  updateStatus,
 };
